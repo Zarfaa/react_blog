@@ -1,0 +1,76 @@
+nav {
+    background:#F13232 ;
+    width: 100%;
+    margin: auto;
+    overflow-x: hidden;
+}
+
+.Toggle_icon{
+    color: #ffffff;
+}
+
+.nav-link.active-link{
+  color: white;
+}
+
+
+
+#Btn-orange {
+    background-color: #F13232;
+    color: white;
+    border: none;
+    padding: 0.6vw 1.5vw;
+}
+
+#Btn-orange:hover {
+    background-color: white;
+    color: #F13232;
+    border: none;
+    padding: 0.6vw 1.5vw;
+}
+
+
+.logo {
+    margin-left: 10vw;
+    font-family: "Lily Script One";
+    font-size: 2vw;
+}
+
+.logo a{
+    text-decoration: none;
+    color: white;
+}
+
+
+
+.navbar-toggler-icon {
+    color: white;
+  }
+
+  @media screen and (max-width:425px){
+    #Btn-orange {
+        background-color: #F13232;
+        color: white;
+        border: none;
+       font-size: 4vh;
+    }
+    .logo img{
+        width: 10vw;
+    }
+  }
+
+  @media screen and (min-width:1440px){
+   .nav-link{
+    font-size: 1.3vw;
+    margin-right: 1vw;
+   }
+
+   #Btn-orange {
+    background-color: #F13232;
+    color: white;
+    border: none;
+    padding: 1vw 3vw;
+}
+
+}
+
