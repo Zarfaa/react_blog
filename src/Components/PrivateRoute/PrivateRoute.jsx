@@ -1,11 +1,16 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router-dom';
 
-const PrivateRoute = ({ element, authenticated, ...rest }) => {
-  return authenticated ? (
-    element
-  ) : (
-    <Navigate to="/blog" replace />
+const PrivateRoute = ({ component: Component, authenticated, ...rest }) => {
+  return (
+    <Routes>
+      <Route
+        {...rest}
+        element={(props) =>
+          authenticated ? <Component {...props} /> : <Navigate to="/login" />
+        }
+      />
+    </Routes>
   );
 };
 

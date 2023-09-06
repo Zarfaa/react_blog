@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Signup = ({ setAuthenticated, setError }) => {
+const Signup = ({setError }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [signupSuccess, setSignupSuccess] = useState(false); // New state for signup success
-  const navigate = useNavigate(); // Hook for navigation
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const navigate = useNavigate(); 
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -21,7 +21,6 @@ const Signup = ({ setAuthenticated, setError }) => {
   };
 
   const registeredUser = async (name, email, password) => {
-    // Simulate a successful signup
     if (name && email && password) {
       return { success: true };
     } else {
@@ -36,12 +35,12 @@ const Signup = ({ setAuthenticated, setError }) => {
       const response = await registeredUser(name, email, password);
       if (response.success) {
         localStorage.setItem("user", JSON.stringify({ email, password }));
-        setSignupSuccess(true); // Set signup success to true
-        setError(''); // Clear any previous error
+        setSignupSuccess(true); 
+        setError(''); 
         setTimeout(() => {
-          setSignupSuccess(false); // Reset signup success after a delay
-          navigate('/login'); // Redirect to login page after successful signup
-        }, 3000); // Redirect after 3 seconds (adjust as needed)
+          setSignupSuccess(false);
+          navigate('/login');
+        }, 1000); 
       } else {
         setError('Registration failed. Please try again.');
       }

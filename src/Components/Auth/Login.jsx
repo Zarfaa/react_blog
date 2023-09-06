@@ -21,17 +21,20 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     try {
       const response = await authenticateUser(email, password);
       if (response.success) {
-        localStorage.setItem("user", JSON.stringify({ email }));
+        localStorage.setItem("user", JSON.stringify({ email , password}));
+        setAuthenticated(true);
         setLoginSuccess(true);
-        setError(""); // Clear any previous error
+        setError(""); 
         setTimeout(() => {
-          setLoginSuccess(false);
-          setAuthenticated(true);
+          console.log("Redirecting to /blog");
           navigate("/blog");
-        }, 3000);
+          setLoginSuccess(false);
+          setAuthenticated(true)
+        }, 1000);
+        
       } else {
         setError(response.error || "An unknown error occurred.");
-        setLoginSuccess(false); // Reset login success
+        setLoginSuccess(false); 
       }
     } catch (error) {
       setError(
@@ -39,7 +42,7 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
           ? "Network error. Please check your internet connection and try again."
           : "An error occurred while processing your request. Please try again later."
       );
-      setLoginSuccess(false); // Reset login success
+      setLoginSuccess(false); 
     }
   };
 
