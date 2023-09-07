@@ -1,5 +1,6 @@
 import "./Home.css"
 import { Link } from "react-router-dom"
+
 let Home = () => {
     return (
         <div className="Home_Container">

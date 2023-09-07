@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
@@ -12,6 +13,10 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     setEmail(e.target.value);
   };
 
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -19,9 +24,9 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await authenticateUser(email, password);
+      const response = await authenticateUser(name,  email, password);
       if (response.success) {
-        localStorage.setItem("user", JSON.stringify({ email , password}));
+        localStorage.setItem("user", JSON.stringify({ name , email , password}));
         setAuthenticated(true);
         setLoginSuccess(true);
         setError(""); 
@@ -54,6 +59,16 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
       )}
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+            <input
+              type="name"
+              className="form-control"
+              id="name"
+              placeholder="Name"
+              value={name}
+              onChange={handleNameChange}
+            />
+          </div>
       <div className="mb-3">
             <input
               type="email"

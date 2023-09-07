@@ -8,56 +8,27 @@ const Blog = ({ authenticated }) => {
   const [newPost, setNewPost] = useState({ title: '', body: '' });
 
   useEffect(() => {
-    if (authenticated) {
-      axios
-        .get('https://jsonplaceholder.typicode.com/posts')
-        .then((response) => {
-          console.log('Fetched posts:', response.data); 
-          setPosts(response.data);
-        })
-        .catch((error) => {
-          console.error('Error fetching posts:', error);
-        });
-    }
-  }, [authenticated]);
-  
-
-  const handleEdit = (postId, updatedPostData) => {
     axios
-      .put(`https://jsonplaceholder.typicode.com/posts/${postId}`, updatedPostData)
+      .get('https://jsonplaceholder.typicode.com/posts')
       .then((response) => {
-        const updatedPosts = posts.map((post) =>
-          post.id === postId ? response.data : post
-        );
-        setPosts(updatedPosts);
+        console.log('Fetched posts:', response.data);
+        setPosts(response.data);
       })
       .catch((error) => {
-        console.error('Error editing post:', error);
+        console.error('Error fetching posts:', error);
       });
-  };
-  
-  const handleDelete = (postId) => {
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/posts/${postId}`)
-      .then(() => {
-        const updatedPosts = posts.filter((post) => post.id !== postId);
-        setPosts(updatedPosts);
-      })
-      .catch((error) => {
-        console.error('Error deleting post:', error);
-      });
-  };
+  }, []);
 
   return (
     <div>
-      {authenticated ? (
+      {authenticated ? ( 
         <>
           <h1>Welcome to the Blog</h1>
-          <CreatePost newPost={newPost} setNewPost={setNewPost} posts={posts} setPosts={setPosts} />
-          <PostList posts={posts} onEdit={handleEdit} onDelete={handleDelete} />
+          <CreatePost newPost={newPost} setNewPost={setNewPost} posts={posts} setPosts={setPosts} authenticated={authenticated} />
+          <PostList posts={posts} authenticated={authenticated} />
         </>
       ) : (
-        <p>Please log in to view the blog posts.</p>
+        <p>Please log in to view the blog.</p>
       )}
     </div>
   );

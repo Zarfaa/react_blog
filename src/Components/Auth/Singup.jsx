@@ -5,6 +5,7 @@ const Signup = ({setError }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
   const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate(); 
 
@@ -30,11 +31,10 @@ const Signup = ({setError }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await registeredUser(name, email, password);
       if (response.success) {
-        localStorage.setItem("user", JSON.stringify({ email, password }));
+        localStorage.setItem("user", JSON.stringify({name, email, password }));
         setSignupSuccess(true); 
         setError(''); 
         setTimeout(() => {
