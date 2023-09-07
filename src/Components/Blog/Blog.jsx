@@ -46,14 +46,11 @@ const Blog = ({ authenticated }) => {
             setPosts={setPosts}
             authenticated={authenticated}
           />
-          <PostList
-            posts={posts}
-            authenticated={authenticated}
-          />
         </>
       ) : (
         <p>Please log in to view the blog.</p>
       )}
+          <PostList posts={posts} />
     </div>
   );
 };
