@@ -2,7 +2,7 @@
 import React from 'react';
 import "./CreatePost.css"
 
-const CreatePost = ({ newPost, setNewPost, posts, setPosts, user }) => {
+const CreatePost = ({ newPost, setNewPost, posts, setPosts}) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewPost({ ...newPost, [name]: value });
@@ -11,7 +11,7 @@ const CreatePost = ({ newPost, setNewPost, posts, setPosts, user }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const postId = Math.max(...posts.map((post) => post.id), 0) + 1;
-    const newPostWithId = { ...newPost, id: postId, userId: user.id };
+    const newPostWithId = { ...newPost, id: postId };
     setPosts([newPostWithId, ...posts]);
     setNewPost({ title: '', body: '' });
   };

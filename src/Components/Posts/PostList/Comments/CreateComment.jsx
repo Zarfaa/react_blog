@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 
-const CreateComment = ({ postId, currentUser, onCommentSubmit }) => {
+const CreateComment = ({ postId, onCommentSubmit }) => {
   const [commentText, setCommentText] = useState('');
 
   const handleCommentChange = (e) => {
