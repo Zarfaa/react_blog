@@ -16,9 +16,9 @@ function App() {
     }
   }, []);
 
-  const authenticateUser = (name, email, password) => {
+  const authenticateUser = (email, password) => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && name === storedUser.name && email === storedUser.email && password === storedUser.password) {
+    if (storedUser  && email === storedUser.email && password === storedUser.password) {
       console.log('Authentication successful');
       setAuthenticated(true);
       return { success: true };

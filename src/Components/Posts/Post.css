@@ -1,6 +1,22 @@
+.Posts{
+    margin: 5%;
+}
+
+.Post_heading{
+    background-color:  rgba(241, 50, 50, 1); 
+    color: white;
+}
+
+.Comments{
+    background-color:  rgba(241, 50, 50, 1); 
+    color: white;
+    width: 10vw;
+}
+
+/* Create Post */
 .Container{
     border: 2px solid rgb(204, 201, 201);
-    padding: 5%;
+    padding: 2%;
     margin: 5%;
 }
 .post{

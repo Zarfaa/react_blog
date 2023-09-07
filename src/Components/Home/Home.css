@@ -1,14 +1,22 @@
 .Home_Container{
     margin: 5%;
-    text-align: center;
+    
 }
 
 .Home_Container h1{
-    margin-top: 15%;
     font-weight: 800;
+    text-align: center;
 }
 
 .Home_Container a{
     text-decoration: none;
     color:  #F13232;
+}
+
+.Post_Btn{
+    margin-left: 85%;
+    border: none;
+    color: white;
+    background-color: #F13232;
+    padding: 10px;
 }
