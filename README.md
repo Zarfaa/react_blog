@@ -1,7 +1,7 @@
 # ReactJs Blog
-User Authentication is done using Local Storage
-Fetched Posts and Comments from https://jsonplaceholder.typicode.com/
-Added Functionality of Create Post
+- User Authentication is done using Local Storage
+- Fetched Posts and Comments from https://jsonplaceholder.typicode.com/
+- Added Functionality of Create Post
 
 # Tech Stack
 - ReactJs
