@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostList from '../Posts/PostList';
 import CreatePost from '../Posts/CreatePost';
-
 import './Blog.css';
 
 const Blog = ({ authenticated }) => {
   const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', body: '', createdBy: '' });
+  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '' });
 
   useEffect(() => {
     axios
@@ -27,6 +26,7 @@ const Blog = ({ authenticated }) => {
             comments: comments[index],
           }));
           setPosts(postsWithComments);
+          console.log(posts)
         });
       })
       .catch((error) => {
@@ -40,12 +40,12 @@ const Blog = ({ authenticated }) => {
         <>
           <h1 className="Blog_Tittle">Welcome to the Blog</h1>
           <CreatePost
-            newPost={newPost}
-            setNewPost={setNewPost}
-            posts={posts}
-            setPosts={setPosts}
-            authenticated={authenticated}
-          />
+  newPost={newPost}
+  setNewPost={setNewPost}
+  posts={posts} 
+  setPosts={setPosts}
+  authenticated={authenticated}
+/>
         </>
       ) : (
         <p>Please log in to view the blog.</p>

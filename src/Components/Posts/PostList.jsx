@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Post.css";
 
-const PostList = ({ posts}) => {
+const PostList = ({ posts }) => {
   
   return (
     <div className="Posts">
@@ -18,6 +18,8 @@ const PostList = ({ posts}) => {
               </li>
             ))}
           </ul>
+          
+          <button >Comment</button>
         </div>
       ))}
     </div>

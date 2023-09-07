@@ -17,13 +17,16 @@ function App() {
   }, []);
 
   const authenticateUser = (email, password) => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser  && email === storedUser.email && password === storedUser.password) {
-      console.log('Authentication successful');
-      setAuthenticated(true);
-      return { success: true };
-    } else {
-      return { success: false, error: 'invalid_credentials' };
+    const storedUser = JSON.parse(localStorage.getItem("users"));
+    if (storedUser){
+      const findUser = storedUser.find((users) => users.email === email && users.password === password)
+      if(findUser) {
+        setAuthenticated(true);
+        return { success: true};
+      }
+      else{
+        return { success: false , error:"invalid credentials"}
+      }
     }
   };
 

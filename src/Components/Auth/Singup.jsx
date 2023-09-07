@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = ({setError }) => {
+  const [users, setUsers] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const navigate = useNavigate(); 
-
+ const id = users.length;
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -21,8 +21,8 @@ const Signup = ({setError }) => {
     setPassword(e.target.value);
   };
 
-  const registeredUser = async (name, email, password) => {
-    if (name && email && password) {
+  const registeredUser = async (name, email, password  ) => {
+    if (name && email && password ) {
       return { success: true };
     } else {
       return { success: false, error: 'registration_failed' };
@@ -33,24 +33,31 @@ const Signup = ({setError }) => {
     e.preventDefault();
     try {
       const response = await registeredUser(name, email, password);
+      let newUser = [];
       if (response.success) {
-        localStorage.setItem("user", JSON.stringify({name, email, password }));
-        setSignupSuccess(true); 
-        setError(''); 
-        setTimeout(() => {
-          setSignupSuccess(false);
-          navigate('/login');
-        }, 1000); 
-      } else {
-        setError('Registration failed. Please try again.');
+        newUser = {
+          id: id + 1,
+          name: name,
+          email: email,
+          password: password
+        }
+        setUsers([newUser, ...users])
+        setSignupSuccess(true);
       }
+      else {
+        setError(response.error);
+      }
+      setTimeout(() => {
+        setSignupSuccess(false);
+      }, 1000);
     } catch (error) {
-      setError(
-        'An error occurred while processing your request. Please try again later.'
-      );
+      console.log("Error", error);
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
+  }, [users])
   return (
     <section className="Form">
       <h1 className="Form_title">Sign Up</h1>

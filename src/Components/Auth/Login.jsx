@@ -2,6 +2,11 @@ import "./Form.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+export const getUserIdFromLocalStorage = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  return user ? user.userId : null;
+};
+
 const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +27,8 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     try {
       const response = await authenticateUser(email, password);
       if (response.success) {
-        localStorage.setItem("user", JSON.stringify({ email , password}));
+        const user = { email, password, userId: response.userId }; // Assuming you receive the user ID from the response
+  localStorage.setItem("user", JSON.stringify(user));
         setAuthenticated(true);
         setLoginSuccess(true);
         setError(""); 
