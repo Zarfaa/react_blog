@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export const getUserIdFromLocalStorage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user ? user.userId : null;
+  const userId = user ? user.id : null; 
   console.log("Retrieved userId from local storage:", userId);
   return userId;
 };
@@ -30,22 +30,22 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     try {
       const response = await authenticateUser(email, password);
       if (response.success) {
-        const user = { email, password, userId: response.userId }; 
-        localStorage.setItem("user", JSON.stringify(user));
-        console.log("Stored user in local storage:", user);     
+        const userId = getUserIdFromLocalStorage(); // Retrieve the user ID
+        const user = { email, password, id: userId }; // Use 'id' as the user ID
+        localStorage.setItem("user", JSON.stringify(user)); // Make sure you are setting it as 'id'
+        console.log(user);
         setAuthenticated(true);
         setLoginSuccess(true);
-        setError(""); 
+        setError("");
         setTimeout(() => {
           console.log("Redirecting to /blog");
           navigate("/blog");
           setLoginSuccess(false);
-          setAuthenticated(true)
+          setAuthenticated(true);
         }, 1000);
-        
       } else {
         setError(response.error || "An unknown error occurred.");
-        setLoginSuccess(false); 
+        setLoginSuccess(false);
       }
     } catch (error) {
       setError(
@@ -53,9 +53,11 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
           ? "Network error. Please check your internet connection and try again."
           : "An error occurred while processing your request. Please try again later."
       );
-      setLoginSuccess(false); 
+      setLoginSuccess(false);
     }
   };
+  
+  
 
   return (
     <section className="Form">

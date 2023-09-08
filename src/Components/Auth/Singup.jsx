@@ -36,15 +36,17 @@ const Signup = ({setError }) => {
       let newUser = [];
       if (response.success) {
         newUser = {
-          id: id + 1,
+          id: id + 1, // Ensure 'id' is incremented correctly
           name: name,
           email: email,
           password: password
         }
         setUsers([newUser, ...users])
         setSignupSuccess(true);
-      }
-      else {
+  
+        // Set the user ID in local storage
+        localStorage.setItem("user", JSON.stringify({ id: newUser.id }));
+      } else {
         setError(response.error);
       }
       setTimeout(() => {
@@ -54,10 +56,7 @@ const Signup = ({setError }) => {
       console.log("Error", error);
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("users", JSON.stringify(users));
-  }, [users])
+  
   return (
     <section className="Form">
       <h1 className="Form_title">Sign Up</h1>
