@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Post.css";
 
-const PostList = ({ posts }) => {
-  
+const PostList = ({
+  posts,
+  authenticated = false,
+  handleCreateComment
+}) => {
+  const [newComment, setNewComment] = useState('');
+
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleCommentSubmit = (postId) => {
+    handleCreateComment(postId, newComment);
+    setNewComment('');
+  };
+
   return (
     <div className="Posts">
       <h2 className="Post_heading py-3 mb-5">Posts</h2>
@@ -13,13 +27,23 @@ const PostList = ({ posts }) => {
           <h4 className='Comments'>Comments:</h4>
           <ul>
             {post.comments.map((comment) => (
-              <li key={comment.id}>
+              <li key={`${post.id}-${comment.id}`}>
                 {comment.body}
               </li>
             ))}
+
           </ul>
-          
-          <button >Comment</button>
+          {authenticated && (
+            <div>
+              <textarea
+                rows="3"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={handleCommentChange}
+              />
+              <button onClick={() => handleCommentSubmit(post.id)}>Comment</button>
+            </div>
+          )}
         </div>
       ))}
     </div>

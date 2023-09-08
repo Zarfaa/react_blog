@@ -4,8 +4,11 @@ import { useState } from "react";
 
 export const getUserIdFromLocalStorage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  return user ? user.userId : null;
+  const userId = user ? user.userId : null;
+  console.log("Retrieved userId from local storage:", userId);
+  return userId;
 };
+
 
 const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
   const [email, setEmail] = useState("");
@@ -27,8 +30,9 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     try {
       const response = await authenticateUser(email, password);
       if (response.success) {
-        const user = { email, password, userId: response.userId }; // Assuming you receive the user ID from the response
-  localStorage.setItem("user", JSON.stringify(user));
+        const user = { email, password, userId: response.userId }; 
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("Stored user in local storage:", user);     
         setAuthenticated(true);
         setLoginSuccess(true);
         setError(""); 

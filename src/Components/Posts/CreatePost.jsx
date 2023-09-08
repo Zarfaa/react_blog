@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import "./Post.css"
 import { getUserIdFromLocalStorage } from '../Auth/Login';
 
@@ -14,8 +14,7 @@ const CreatePost = ({ newPost, setNewPost, posts, setPosts}) => {
     const postId = Math.max(...posts.map((post) => post.id), 0) + 1;
     const newPostWithId = { ...newPost, id: postId, comments: [] }; 
     setPosts([newPostWithId, ...posts]);
-    setNewPost({ title: '', body: '', Id: '' });
-
+    setNewPost({ title: '', body: '', Id: '' , userId: ''});
     const postKey = `post_${postId}`;
     localStorage.setItem(postKey, JSON.stringify(newPostWithId));
   };

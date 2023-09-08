@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostList from '../Posts/PostList';
 import CreatePost from '../Posts/CreatePost';
+import { getUserIdFromLocalStorage } from '../Auth/Login';
 import './Blog.css';
 
 const Blog = ({ authenticated }) => {
   const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '' });
-
+  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '' , userId: '' });
+  const userId = getUserIdFromLocalStorage();
+  console.log('userId from local storage:', userId);
   useEffect(() => {
     axios
       .get('https://jsonplaceholder.typicode.com/posts')
@@ -33,7 +35,29 @@ const Blog = ({ authenticated }) => {
         console.error('Error fetching posts:', error);
       });
   }, []);
+
   
+  const handleCreateComment = (postId, newCommentText) => {
+    const newComment = {
+      id: "",
+      body: newCommentText,
+      userId: userId,
+    };
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const updatedComments = [...post.comments, newComment];
+        return {
+          ...post,
+          comments: updatedComments,
+        };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+  
+  
+  console.log('authenticated:', authenticated);
   return (
     <div>
       {authenticated ? (
@@ -50,7 +74,11 @@ const Blog = ({ authenticated }) => {
       ) : (
         <p>Please log in to view the blog.</p>
       )}
-          <PostList posts={posts} />
+       <PostList
+  posts={posts}
+  authenticated={authenticated}
+  handleCreateComment={handleCreateComment}
+/>
     </div>
   );
 };

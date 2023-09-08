@@ -21,7 +21,7 @@ const Signup = ({setError }) => {
     setPassword(e.target.value);
   };
 
-  const registeredUser = async (name, email, password  ) => {
+  const registeredUser =  (name, email, password  ) => {
     if (name && email && password ) {
       return { success: true };
     } else {
