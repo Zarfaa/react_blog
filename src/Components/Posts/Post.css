@@ -1,5 +1,10 @@
-.Posts{
+.Posts {
     margin: 5%;
+}
+
+.Blog_Tittle{
+    text-align: center;
+    margin-top: 5%;
 }
 
 .Post_heading{
@@ -11,6 +16,13 @@
     background-color:  rgba(241, 50, 50, 1); 
     color: white;
     width: 10vw;
+}
+
+.Comment_Btn{
+    background-color:  rgba(241, 50, 50, 1); 
+    color: white;
+    border: none;
+    margin-right: 2%;
 }
 
 /* Create Post */

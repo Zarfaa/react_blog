@@ -4,9 +4,14 @@ import { useState } from "react";
 
 export const getUserIdFromLocalStorage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user ? user.id : null; 
+  const userId = user ? user.id : null;
   console.log("Retrieved userId from local storage:", userId);
   return userId;
+};
+
+export const getUsersFromLocalStorage = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  return users;
 };
 
 
@@ -30,16 +35,16 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
     try {
       const response = await authenticateUser(email, password);
       if (response.success) {
-        const userId = getUserIdFromLocalStorage(); // Retrieve the user ID
-        const user = { email, password, id: userId }; // Use 'id' as the user ID
-        localStorage.setItem("user", JSON.stringify(user)); // Make sure you are setting it as 'id'
+        const userId = getUserIdFromLocalStorage(); 
+        const user = { email, password, id: userId };
+        localStorage.setItem("user", JSON.stringify(user)); 
         console.log(user);
         setAuthenticated(true);
         setLoginSuccess(true);
         setError("");
         setTimeout(() => {
-          console.log("Redirecting to /blog");
-          navigate("/blog");
+          console.log("Redirecting to /posts");
+          navigate("/posts");
           setLoginSuccess(false);
           setAuthenticated(true);
         }, 1000);
@@ -48,11 +53,8 @@ const Login = ({ authenticateUser, setAuthenticated, setError, error }) => {
         setLoginSuccess(false);
       }
     } catch (error) {
-      setError(
-        error.message === "Network Error"
-          ? "Network error. Please check your internet connection and try again."
-          : "An error occurred while processing your request. Please try again later."
-      );
+      console.error("Login Error:", error);
+      setError(error.message); 
       setLoginSuccess(false);
     }
   };

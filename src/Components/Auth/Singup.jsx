@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const Signup = ({setError }) => {
+const Signup = ({ setError }) => {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const [signupSuccess, setSignupSuccess] = useState(false);
- const id = users.length;
+  const id = users.length;
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -21,8 +21,8 @@ const Signup = ({setError }) => {
     setPassword(e.target.value);
   };
 
-  const registeredUser =  (name, email, password  ) => {
-    if (name && email && password ) {
+  const registeredUser = (name, email, password) => {
+    if (name && email && password) {
       return { success: true };
     } else {
       return { success: false, error: 'registration_failed' };
@@ -36,16 +36,17 @@ const Signup = ({setError }) => {
       let newUser = [];
       if (response.success) {
         newUser = {
-          id: id + 1, // Ensure 'id' is incremented correctly
+          id: id + 1,
           name: name,
           email: email,
           password: password
         }
         setUsers([newUser, ...users])
         setSignupSuccess(true);
-  
-        // Set the user ID in local storage
         localStorage.setItem("user", JSON.stringify({ id: newUser.id }));
+        const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+        const updatedUsers = [...existingUsers, newUser];
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
       } else {
         setError(response.error);
       }
@@ -56,13 +57,13 @@ const Signup = ({setError }) => {
       console.log("Error", error);
     }
   };
-  
+
   return (
     <section className="Form">
       <h1 className="Form_title">Sign Up</h1>
-      {signupSuccess && <p className="success-message">Account created successfully.</p>} 
+      {signupSuccess && <p className="success-message">Account created successfully.</p>}
       <form onSubmit={handleSubmit}>
-      <div className="mb-3">
+        <div className="mb-3">
           <input
             type="text"
             className="form-control"

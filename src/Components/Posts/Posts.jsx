@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PostList from '../Posts/PostList';
-import CreatePost from '../Posts/CreatePost';
+import PostList from './PostList';
+import CreatePost from './CreatePost';
 import { getUserIdFromLocalStorage } from '../Auth/Login';
-import './Blog.css';
+import "./Post.css"
 
-const Blog = ({ authenticated }) => {
+const Posts = ({ authenticated }) => {
   const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '' , userId: '' });
+  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '', userId: '' });
   const userId = getUserIdFromLocalStorage();
   console.log('userId from local storage:', userId);
   useEffect(() => {
@@ -36,12 +36,13 @@ const Blog = ({ authenticated }) => {
       });
   }, []);
 
-  
+
   const handleCreateComment = (postId, newCommentText) => {
     const newComment = {
-      id: "",
+      id: "", 
       body: newCommentText,
       userId: userId,
+      isNew: true, 
     };
     const updatedPosts = posts.map((post) => {
       if (post.id === postId) {
@@ -55,32 +56,60 @@ const Blog = ({ authenticated }) => {
     });
     setPosts(updatedPosts);
   };
+  const handleEditComment = (postId, commentId, editedCommentText) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const updatedComments = post.comments.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, body: editedCommentText };
+          }
+          return comment;
+        });
+        return { ...post, comments: updatedComments };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
   
+  const handleDeleteComment = (postId, commentId) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const updatedComments = post.comments.filter((comment) => comment.id !== commentId);
+        return { ...post, comments: updatedComments };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
   
-  console.log('authenticated:', authenticated);
+    
   return (
     <div>
       {authenticated ? (
         <>
           <h1 className="Blog_Tittle">Welcome to the Blog</h1>
           <CreatePost
-  newPost={newPost}
-  setNewPost={setNewPost}
-  posts={posts} 
-  setPosts={setPosts}
-  authenticated={authenticated}
-/>
+            newPost={newPost}
+            setNewPost={setNewPost}
+            posts={posts}
+            setPosts={setPosts}
+            authenticated={authenticated}
+          />
         </>
       ) : (
-        <p>Please log in to view the blog.</p>
+        <p>Please log in to create Post and Comment</p>
       )}
-       <PostList
+      <PostList
   posts={posts}
   authenticated={authenticated}
   handleCreateComment={handleCreateComment}
+  handleEditComment={handleEditComment} // Make sure this is correctly passed
+  handleDeleteComment={handleDeleteComment} // Make sure this is correctly passed
 />
+
     </div>
   );
 };
 
-export default Blog;
+export default Posts;

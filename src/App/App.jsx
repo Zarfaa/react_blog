@@ -4,7 +4,8 @@ import Login from '../Components/Auth/Login';
 import Signup from '../Components/Auth/Singup';
 import Home from '../Components/Home/Home';
 import Navbar from "../Components/Navbar/Navbar";
-import Blog from "../Components/Blog/Blog"
+import Posts from "../Components/Posts/Posts"
+import {getUsersFromLocalStorage} from "../Components/Auth/Login"
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
@@ -17,18 +18,16 @@ function App() {
   }, []);
 
   const authenticateUser = (email, password) => {
-    const storedUser = JSON.parse(localStorage.getItem("users"));
-    if (storedUser){
-      const findUser = storedUser.find((users) => users.email === email && users.password === password)
-      if(findUser) {
-        setAuthenticated(true);
-        return { success: true};
-      }
-      else{
-        return { success: false , error:"invalid credentials"}
-      }
+    const storedUsers = getUsersFromLocalStorage();
+    const findUser = storedUsers.find((user) => user.email === email && user.password === password);
+    if (findUser) {
+      setAuthenticated(true);
+      return { success: true };
+    } else {
+      throw new Error("Invalid credentials");
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -42,7 +41,7 @@ function App() {
   <Route path="/" element={<Home />} />
   <Route path="/login" element={<Login authenticateUser={authenticateUser} setAuthenticated={setAuthenticated} setError={setError} error={error} />} />
   <Route path="/signup" element={<Signup setAuthenticated={setAuthenticated} setError={setError} />} />
-  <Route path="/blog" element={<Blog authenticated={authenticated} />} />
+  <Route path="/posts" element={<Posts authenticated={authenticated} />} />
 </Routes>
     </BrowserRouter>
   );
