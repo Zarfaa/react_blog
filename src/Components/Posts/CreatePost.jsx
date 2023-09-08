@@ -10,9 +10,15 @@ const CreatePost = ({ newPost, setNewPost, posts, setPosts}) => {
   };
 
   const handleSubmit = (e) => {
+    const userId = getUserIdFromLocalStorage();
     e.preventDefault();
     const postId = Math.max(...posts.map((post) => post.id), 0) + 1;
-    const newPostWithId = { ...newPost, id: postId, comments: [] }; 
+    const newPostWithId = {
+      ...newPost,
+      id: postId,
+      createdBy: userId, 
+      comments: [],
+    };
     setPosts([newPostWithId, ...posts]);
     setNewPost({ title: '', body: '', Id: '' , userId: ''});
     const postKey = `post_${postId}`;

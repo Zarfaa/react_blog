@@ -8,6 +8,7 @@ import "./Post.css"
 const Posts = ({ authenticated }) => {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: '', body: '', Id: '', userId: '' });
+  const [editedCommentText, setEditedCommentText] = useState({});
   const userId = getUserIdFromLocalStorage();
   console.log('userId from local storage:', userId);
   useEffect(() => {
@@ -56,6 +57,7 @@ const Posts = ({ authenticated }) => {
     });
     setPosts(updatedPosts);
   };
+
   const handleEditComment = (postId, commentId, editedCommentText) => {
     const updatedPosts = posts.map((post) => {
       if (post.id === postId) {
@@ -83,7 +85,24 @@ const Posts = ({ authenticated }) => {
     setPosts(updatedPosts);
   };
   
-    
+
+  const handleEditPost = (postId, editedPost) => {
+    console.log("Editing post:", postId, editedPost);
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId && post.createdBy === userId) {
+        return { ...post, ...editedPost };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+  
+
+  const handleDeletePost = (postId) => {
+    const updatedPosts = posts.filter((post) => !(post.id === postId && post.createdBy === userId));
+    setPosts(updatedPosts);
+  };
+  
   return (
     <div>
       {authenticated ? (
@@ -104,9 +123,13 @@ const Posts = ({ authenticated }) => {
   posts={posts}
   authenticated={authenticated}
   handleCreateComment={handleCreateComment}
-  handleEditComment={handleEditComment} // Make sure this is correctly passed
-  handleDeleteComment={handleDeleteComment} // Make sure this is correctly passed
+  handleEditComment={handleEditComment}
+  handleDeleteComment={handleDeleteComment}
+  handleEditPostClick={handleEditPost} 
+  handleDeletePost={handleDeletePost}
 />
+
+
 
     </div>
   );

@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./Post.css";
+import { getUserIdFromLocalStorage } from '../Auth/Login';
+
+const userId = getUserIdFromLocalStorage();
 
 const PostList = ({
   posts,
@@ -7,19 +10,43 @@ const PostList = ({
   handleCreateComment,
   handleEditComment,
   handleDeleteComment,
+  handleDeletePost,
+  handleEditPostClick, 
 }) => {
   const [newComment, setNewComment] = useState('');
-  const [editedCommentText, setEditedCommentText] = useState({}); // Use an object to store edited text for each comment
+  const [editedCommentText, setEditedCommentText] = useState({});
+  const [editedPostData, setEditedPostData] = useState({});
 
   const handleCommentChange = (e, commentId) => {
-    // Update the editedCommentText for the specific comment
-    setEditedCommentText({ ...editedCommentText, [commentId]: e.target.value });
+    setEditedCommentText((prevEditedCommentText) => ({
+      ...prevEditedCommentText,
+      [commentId]: e.target.value,
+    }));
   };
-
+  useEffect(() => {
+    console.log('PostList re-rendered'); // Add this line to check if the component re-renders
+  }, [posts]);
   const handleCommentSubmit = (postId) => {
     handleCreateComment(postId, newComment);
     setNewComment('');
   };
+
+  const handleEditPost = (postId, post) => {
+    const updatedPostData = {
+      title: editedPostData[postId]?.title || post.title,
+      body: editedPostData[postId]?.body || post.body,
+    };
+    console.log("Updated post data:", updatedPostData);
+  
+    handleEditPostClick(postId, updatedPostData);
+    setEditedPostData((prevEditedPostData) => ({
+      ...prevEditedPostData,
+      [postId]: {},
+    }));
+  };
+  
+  
+
 
   return (
     <div className="Posts">
@@ -57,6 +84,27 @@ const PostList = ({
               </li>
             ))}
           </ul>
+          {authenticated && (
+            <div className='CommentActions'>
+              {post.createdBy === userId && (
+                <>
+                  <button
+                    className='Comment_Btn'
+                    onClick={() => handleEditPost(post.id, post)} // Use the prop 'handleEditPost'
+                  >
+                    Edit Post
+                  </button>
+
+                  <button
+                    className='Comment_Btn'
+                    onClick={() => handleDeletePost(post.id)}
+                  >
+                    Delete Post
+                  </button>
+                </>
+              )}
+            </div>
+          )}
           {authenticated && (
             <div className='Comment'>
               <textarea
