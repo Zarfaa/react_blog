@@ -8,7 +8,7 @@ const Signup = ({ setError }) => {
   const [password, setPassword] = useState('');
 
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const id = users.length;
+  let id = users.length;
   const handleNameChange = (e) => {
     setName(e.target.value);
   };

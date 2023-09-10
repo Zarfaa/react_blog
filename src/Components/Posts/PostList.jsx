@@ -13,7 +13,7 @@ const PostList = ({
   handleDeletePost,
   handleEditPostClick, 
 }) => {
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState([]);
   const [editedCommentText, setEditedCommentText] = useState({});
   const [editedPostData, setEditedPostData] = useState({});
 
@@ -23,8 +23,9 @@ const PostList = ({
       [commentId]: e.target.value,
     }));
   };
+
   useEffect(() => {
-    console.log('PostList re-rendered'); // Add this line to check if the component re-renders
+    console.log('PostList re-rendered'); 
   }, [posts]);
   const handleCommentSubmit = (postId) => {
     handleCreateComment(postId, newComment);
@@ -44,8 +45,6 @@ const PostList = ({
       [postId]: {},
     }));
   };
-  
-  
 
 
   return (
@@ -67,8 +66,8 @@ const PostList = ({
                         <textarea
                           rows="3"
                           placeholder="Edit your comment..."
-                          value={editedCommentText[comment.id] || ''} // Use editedCommentText for this comment
-                          onChange={(e) => handleCommentChange(e, comment.id)} // Pass the commentId
+                          value={editedCommentText[comment.id] || ''}
+                          onChange={(e) => handleCommentChange(e, comment.id)}
                         />
                         <button
                           className='Comment_Btn'
@@ -82,15 +81,17 @@ const PostList = ({
                   </div>
                 )}
               </li>
+              
             ))}
+            
           </ul>
           {authenticated && (
             <div className='CommentActions'>
-              {post.createdBy === userId && (
+              {post.userId === userId && (
                 <>
                   <button
                     className='Comment_Btn'
-                    onClick={() => handleEditPost(post.id, post)} // Use the prop 'handleEditPost'
+                    onClick={() => handleEditPost(post.id, post)} 
                   >
                     Edit Post
                   </button>

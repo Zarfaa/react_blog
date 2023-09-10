@@ -7,8 +7,7 @@ import "./Post.css"
 
 const Posts = ({ authenticated }) => {
   const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', body: '', Id: '', userId: '' });
-  const [editedCommentText, setEditedCommentText] = useState({});
+
   const userId = getUserIdFromLocalStorage();
   console.log('userId from local storage:', userId);
   useEffect(() => {
@@ -89,7 +88,7 @@ const Posts = ({ authenticated }) => {
   const handleEditPost = (postId, editedPost) => {
     console.log("Editing post:", postId, editedPost);
     const updatedPosts = posts.map((post) => {
-      if (post.id === postId && post.createdBy === userId) {
+      if (post.id === postId && post.userId === userId) {
         return { ...post, ...editedPost };
       }
       return post;
@@ -99,7 +98,7 @@ const Posts = ({ authenticated }) => {
   
 
   const handleDeletePost = (postId) => {
-    const updatedPosts = posts.filter((post) => !(post.id === postId && post.createdBy === userId));
+    const updatedPosts = posts.filter((post) => !(post.id === postId && post.userId=== userId));
     setPosts(updatedPosts);
   };
   
@@ -109,8 +108,6 @@ const Posts = ({ authenticated }) => {
         <>
           <h1 className="Blog_Tittle">Welcome to the Blog</h1>
           <CreatePost
-            newPost={newPost}
-            setNewPost={setNewPost}
             posts={posts}
             setPosts={setPosts}
             authenticated={authenticated}
