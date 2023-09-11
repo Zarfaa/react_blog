@@ -1,7 +1,9 @@
 .Posts {
     margin: 5%;
 }
-
+.loading-spinner{
+    color:rgba(241, 50, 50, 1); 
+}
 .Blog_Tittle{
     text-align: center;
     margin-top: 5%;
@@ -38,10 +40,4 @@
 }
 
 
-.Post_Btn{
-    background: rgba(241, 50, 50, 1);
-    border: none;
-    color: white;
-    padding: 1vw;
-    border-radius: 25px;
-}
+

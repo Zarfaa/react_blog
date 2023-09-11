@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostList from './PostList';
 import CreatePost from './CreatePost';
-import { getUserIdFromLocalStorage } from '../Auth/Login';
+import { useNavigate } from 'react-router-dom'; 
 import "./Post.css"
 
 const Posts = ({ authenticated }) => {
-  const [posts, setPosts] = useState([]);
-
-  const userId = getUserIdFromLocalStorage();
-  console.log('userId from local storage:', userId);
+  const [posts, setPosts] = useState([]); 
+  const navigate = useNavigate()
   useEffect(() => {
     axios
       .get('https://jsonplaceholder.typicode.com/posts')
@@ -37,97 +35,17 @@ const Posts = ({ authenticated }) => {
   }, []);
 
 
-  const handleCreateComment = (postId, newCommentText) => {
-    const newComment = {
-      id: "", 
-      body: newCommentText,
-      userId: userId,
-      isNew: true, 
-    };
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId) {
-        const updatedComments = [...post.comments, newComment];
-        return {
-          ...post,
-          comments: updatedComments,
-        };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-
-  const handleEditComment = (postId, commentId, editedCommentText) => {
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId) {
-        const updatedComments = post.comments.map((comment) => {
-          if (comment.id === commentId) {
-            return { ...comment, body: editedCommentText };
-          }
-          return comment;
-        });
-        return { ...post, comments: updatedComments };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-  
-  const handleDeleteComment = (postId, commentId) => {
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId) {
-        const updatedComments = post.comments.filter((comment) => comment.id !== commentId);
-        return { ...post, comments: updatedComments };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-  
-
-  const handleEditPost = (postId, editedPost) => {
-    console.log("Editing post:", postId, editedPost);
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId && post.userId === userId) {
-        return { ...post, ...editedPost };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-  
-
-  const handleDeletePost = (postId) => {
-    const updatedPosts = posts.filter((post) => !(post.id === postId && post.userId=== userId));
-    setPosts(updatedPosts);
-  };
-  
   return (
     <div>
       {authenticated ? (
         <>
           <h1 className="Blog_Tittle">Welcome to the Blog</h1>
-          <CreatePost
-            posts={posts}
-            setPosts={setPosts}
-            authenticated={authenticated}
-          />
+          <CreatePost posts={posts} setPosts={setPosts} authenticated={authenticated}/>
         </>
       ) : (
-        <p>Please log in to create Post and Comment</p>
+        navigate('/home')
       )}
-      <PostList
-  posts={posts}
-  authenticated={authenticated}
-  handleCreateComment={handleCreateComment}
-  handleEditComment={handleEditComment}
-  handleDeleteComment={handleDeleteComment}
-  handleEditPostClick={handleEditPost} 
-  handleDeletePost={handleDeletePost}
-/>
-
-
-
+      <PostList  setPosts={setPosts} posts={posts} authenticated={authenticated}/>
     </div>
   );
 };

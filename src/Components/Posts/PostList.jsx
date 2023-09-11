@@ -1,21 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import "./Post.css";
 import { getUserIdFromLocalStorage } from '../Auth/Login';
 
 const userId = getUserIdFromLocalStorage();
 
 const PostList = ({
+  setPosts,
   posts,
-  authenticated = false,
-  handleCreateComment,
-  handleEditComment,
-  handleDeleteComment,
-  handleDeletePost,
-  handleEditPostClick, 
+  authenticated = false
 }) => {
   const [newComment, setNewComment] = useState([]);
+  const [body, setBody] = useState("");
   const [editedCommentText, setEditedCommentText] = useState({});
-  const [editedPostData, setEditedPostData] = useState({});
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedBody, setEditedBody] = useState("");
+  const handleBodyChange = (e) => {
+    setBody(e.target.value);
+  };
+
+  const commentCreated = (title) => {
+    if (title) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Comment_creation_failed' };
+    }
+  };
+  const handleCreateComment = async (postId) => {
+    try {
+      const response = await commentCreated(body);
+      if (response.success) {
+        const userId = getUserIdFromLocalStorage();
+        const commentId = Math.max(...posts.map((post) => Math.max(...post.comments.map((comment) => comment.id), 0)), 0) + 1;
+
+        const newCommentWithId = {
+          id: commentId,
+          body: body,
+          userId: userId,
+          isNew: true,
+        };
+
+        const updatedPosts = posts.map((post) => {
+          if (post.id === postId) {
+            const updatedComments = [...post.comments, newCommentWithId];
+            return {
+              ...post,
+              comments: updatedComments,
+            };
+          }
+          return post;
+        });
+
+        setPosts(updatedPosts);
+        setNewComment('');
+        setBody('');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
 
   const handleCommentChange = (e, commentId) => {
     setEditedCommentText((prevEditedCommentText) => ({
@@ -24,26 +66,49 @@ const PostList = ({
     }));
   };
 
-  useEffect(() => {
-    console.log('PostList re-rendered'); 
-  }, [posts]);
-  const handleCommentSubmit = (postId) => {
-    handleCreateComment(postId, newComment);
-    setNewComment('');
+
+  const handleEditComment = (postId, commentId, editedCommentText) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const updatedComments = post.comments.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, body: editedCommentText };
+          }
+          return comment;
+        });
+        return { ...post, comments: updatedComments };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
   };
 
-  const handleEditPost = (postId, post) => {
-    const updatedPostData = {
-      title: editedPostData[postId]?.title || post.title,
-      body: editedPostData[postId]?.body || post.body,
-    };
-    console.log("Updated post data:", updatedPostData);
-  
-    handleEditPostClick(postId, updatedPostData);
-    setEditedPostData((prevEditedPostData) => ({
-      ...prevEditedPostData,
-      [postId]: {},
-    }));
+  const handleDeleteComment = (postId, commentId) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const updatedComments = post.comments.filter((comment) => comment.id !== commentId);
+        return { ...post, comments: updatedComments };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+
+
+  const handleEditPost = (postId, editedTitle, editedBody) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId && post.userId === userId) {
+        return { ...post, title: editedTitle, body: editedBody };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+
+
+  const handleDeletePost = (postId) => {
+    const updatedPosts = posts.filter((post) => !(post.id === postId && post.userId === userId));
+    setPosts(updatedPosts);
   };
 
 
@@ -75,27 +140,36 @@ const PostList = ({
                         >
                           Edit
                         </button>
-                        <button className='Comment_Btn' onClick={() => handleDeleteComment(post.id, comment.id)}>Delete</button>
+                        <button
+                          className='Comment_Btn'
+                          onClick={() => handleDeleteComment(post.id, comment.id)}
+                        >
+                          Delete
+                        </button>
+
                       </div>
                     ) : null}
                   </div>
                 )}
               </li>
-              
+
             ))}
-            
+
           </ul>
-          {authenticated && (
-            <div className='CommentActions'>
+          {authenticated && post.isNew && (
+            <div className='PostActions'>
               {post.userId === userId && (
                 <>
                   <button
                     className='Comment_Btn'
-                    onClick={() => handleEditPost(post.id, post)} 
+                    onClick={() => {
+                      setEditedTitle(post.title);
+                      setEditedBody(post.body);
+                      handleEditPost(post.id, editedTitle, editedBody);
+                    }}
                   >
                     Edit Post
                   </button>
-
                   <button
                     className='Comment_Btn'
                     onClick={() => handleDeletePost(post.id)}
@@ -106,16 +180,35 @@ const PostList = ({
               )}
             </div>
           )}
+          {authenticated && post.isNew && post.userId === userId && (
+            <div className='EditPostForm'>
+              <div>
+              <input
+                type='text'
+                placeholder='Edit title...'
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+              />
+              </div>
+              <textarea
+                rows="3"
+                placeholder="Edit body..."
+                value={editedBody}
+                onChange={(e) => setEditedBody(e.target.value)}
+              />
+            </div>
+          )}
+
           {authenticated && (
             <div className='Comment'>
               <textarea
                 rows="3"
                 placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                value={body}
+                onChange={handleBodyChange}
               />
               <div>
-                <button className='Comment_Btn' onClick={() => handleCommentSubmit(post.id)}>Comment</button>
+                <button className='Comment_Btn' onClick={() => handleCreateComment(post.id)}>Comment</button>
               </div>
             </div>
           )}
